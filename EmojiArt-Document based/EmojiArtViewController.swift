@@ -68,7 +68,14 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     //close the document
     @IBAction func Close(_ sender: UIBarButtonItem) {
         Save()
-        document?.close()
+        //set the thumbnail
+        if document?.emojiArt != nil {
+            document?.thumbnail = emojiArtView.snapshot
+        }
+        //when clicking done button, hide the document
+        dismiss(animated: true) {
+            self.document?.close()
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

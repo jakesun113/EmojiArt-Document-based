@@ -12,6 +12,8 @@ class EmojiArtDocument: UIDocument {
     
     var emojiArt: EmojiArt?
     
+    var thumbnail: UIImage?
+    
     override func contents(forType typeName: String) throws -> Any {
         // Encode your document with an instance of NSData or NSFileWrapper
         return emojiArt?.json ?? Data()
@@ -23,5 +25,19 @@ class EmojiArtDocument: UIDocument {
             emojiArt = EmojiArt(json: json)
         }
     }
+    
+    //customize the icon of the document
+    override func fileAttributesToWrite(
+        to url: URL,
+        for saveOperation: UIDocument.SaveOperation
+        ) throws -> [AnyHashable : Any] {
+        var attributes = try super.fileAttributesToWrite(to: url,
+                                                         for: saveOperation)
+        if let thumbnail = self.thumbnail {
+            attributes[URLResourceKey.thumbnailDictionaryKey] = [URLThumbnailDictionaryItem.NSThumbnail1024x1024SizeKey:thumbnail]
+        }
+        return attributes
+    }
+    
 }
 
