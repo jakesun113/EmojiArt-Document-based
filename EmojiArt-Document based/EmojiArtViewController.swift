@@ -150,6 +150,8 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             emojiCollectionView.delegate = self
             emojiCollectionView.dragDelegate = self
             emojiCollectionView.dropDelegate = self
+            //make dragging elements on collection view enabled on iphone
+            emojiCollectionView.dragInteractionEnabled = true
         }
     }
     
