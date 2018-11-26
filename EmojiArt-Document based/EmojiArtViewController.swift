@@ -66,7 +66,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     }
     
     //close the document
-    @IBAction func Close(_ sender: UIBarButtonItem) {
+    @IBAction func close(_ sender: UIBarButtonItem) {
         
         //set the thumbnail
         if document?.emojiArt != nil {
@@ -74,15 +74,45 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         }
         //when clicking done button, hide the document
         dismiss(animated: true) {
-            self.document?.close()
+            self.document?.close { success in
+                //remove observing the document
+                if let observer = self.documentObserver {
+                    NotificationCenter.default.removeObserver(observer)
+                }
+            }
         }
     }
+    
+    private var documentObserver: NSObjectProtocol?
+    //private var emojiArtViewObserver: NSObjectProtocol?
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        //start observering the document
+        documentObserver = NotificationCenter.default.addObserver(
+            forName: UIDocument.stateChangedNotification,
+            object: document,
+            queue: OperationQueue.main,
+            using: { notification in
+                print("documentState changed to \(self.document!.documentState)")
+        }
+        )
         document?.open { success in
             if success {
                 self.title = self.document?.localizedName
                 self.emojiArt = self.document?.emojiArt
+                // now that our document is open
+                // start watching our EmojiArtView for changes
+                // so we can let our document know when it has changes
+                // that need to be autosaved
+//                self.emojiArtViewObserver = NotificationCenter.default.addObserver(
+//                    forName: .EmojiArtViewDidChange,
+//                    object: self.emojiArtView,
+//                    queue: OperationQueue.main,
+//                    using: { notification in
+//                        self.documentChanged()
+//                }
+//                )
             }
         }
     }
@@ -346,6 +376,12 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         imageFetcher = ImageFetcher() { (url, image) in
             DispatchQueue.main.async {
                 self.emojiArtBackgroundImage = (url, image)
+                // in addition to emoji being added in our EmojiArtView
+                // causing our document to change
+                // whenever a new background image is dropped
+                // our document changes as well
+                // so we note that
+                self.documentChanged()
             }
             
         }

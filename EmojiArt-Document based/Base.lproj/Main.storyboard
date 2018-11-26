@@ -171,7 +171,7 @@
                     <navigationItem key="navigationItem" id="bT9-Xx-v2d">
                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="eR2-Zq-Qmi">
                             <connections>
-                                <action selector="Close:" destination="dn6-ic-rhh" id="9Gx-Bn-Ipg"/>
+                                <action selector="close:" destination="dn6-ic-rhh" id="9Gx-Bn-Ipg"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
