@@ -174,11 +174,6 @@
                                 <action selector="Close:" destination="dn6-ic-rhh" id="9Gx-Bn-Ipg"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="1Ck-9E-jdD">
-                            <connections>
-                                <action selector="Save:" destination="dn6-ic-rhh" id="axQ-hN-USJ"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
