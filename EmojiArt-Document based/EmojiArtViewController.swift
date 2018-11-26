@@ -55,28 +55,32 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             }
         }
     }
+    var document: EmojiArtDocument?
     
-    @IBAction func Save(_ sender: UIBarButtonItem) {
-        if let json = emojiArt?.json {
-            //save the document into local file system
-            if let url = try? FileManager.default.url(
-                for: .documentDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-                ).appendingPathComponent("Untitled.json"){
-                do {
-                    try json.write(to: url)
-                    print ("saved successfully")
-                } catch let error {
-                    print ("couldn't save \(error)")
-                }
-            }
+    //auto save the doucment
+    @IBAction func Save(_ sender: UIBarButtonItem? = nil) {
+        document?.emojiArt = emojiArt
+        if document?.emojiArt != nil {
+            document?.updateChangeCount(.done)
         }
     }
     
+    //close the document
+    @IBAction func Close(_ sender: UIBarButtonItem) {
+        Save()
+        document?.close()
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        document?.open { success in
+            if success {
+                self.title = self.document?.localizedName
+                self.emojiArt = self.document?.emojiArt
+            }
+        }
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
         //get the json url
         if let url = try? FileManager.default.url(
             for: .documentDirectory,
@@ -84,9 +88,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             appropriateFor: nil,
             create: true
             ).appendingPathComponent("Untitled.json") {
-            if let jsonData = try? Data(contentsOf: url) {
-                emojiArt = EmojiArt(json: jsonData)
-            }
+            document = EmojiArtDocument(fileURL: url)
         }
     }
     

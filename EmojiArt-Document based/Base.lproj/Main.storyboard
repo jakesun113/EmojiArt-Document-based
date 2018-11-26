@@ -169,6 +169,11 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="bT9-Xx-v2d">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="eR2-Zq-Qmi">
+                            <connections>
+                                <action selector="Close:" destination="dn6-ic-rhh" id="9Gx-Bn-Ipg"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="1Ck-9E-jdD">
                             <connections>
                                 <action selector="Save:" destination="dn6-ic-rhh" id="axQ-hN-USJ"/>
