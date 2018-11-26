@@ -68,6 +68,10 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     //close the document
     @IBAction func close(_ sender: UIBarButtonItem) {
         
+        if let observer = emojiArtViewObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        
         //set the thumbnail
         if document?.emojiArt != nil {
             document?.thumbnail = emojiArtView.snapshot
@@ -84,7 +88,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     }
     
     private var documentObserver: NSObjectProtocol?
-    //private var emojiArtViewObserver: NSObjectProtocol?
+    private var emojiArtViewObserver: NSObjectProtocol?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -105,14 +109,14 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
                 // start watching our EmojiArtView for changes
                 // so we can let our document know when it has changes
                 // that need to be autosaved
-//                self.emojiArtViewObserver = NotificationCenter.default.addObserver(
-//                    forName: .EmojiArtViewDidChange,
-//                    object: self.emojiArtView,
-//                    queue: OperationQueue.main,
-//                    using: { notification in
-//                        self.documentChanged()
-//                }
-//                )
+                self.emojiArtViewObserver = NotificationCenter.default.addObserver(
+                    forName: .EmojiArtViewDidChange,
+                    object: self.emojiArtView,
+                    queue: OperationQueue.main,
+                    using: { notification in
+                        self.documentChanged()
+                }
+                )
             }
         }
     }
@@ -125,7 +129,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         }
     }
     
-    var emojiArtView = EmojiArtView()
+    lazy var emojiArtView = EmojiArtView()
     
     @IBOutlet weak var scrollViewWidth: NSLayoutConstraint!
     

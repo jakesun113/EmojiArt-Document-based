@@ -26,6 +26,10 @@ protocol EmojiArtViewDelegate: class {
     func emojiArtViewDidChange(_ sender: EmojiArtView)
 }
 
+extension Notification.Name {
+    static let EmojiArtViewDidChange = Notification.Name("EmojiArtViewDidChange")
+}
+
 class EmojiArtView: UIView, UIDropInteractionDelegate {
 
     // ADDED AFTER LECTURE 14
@@ -71,9 +75,19 @@ class EmojiArtView: UIView, UIDropInteractionDelegate {
             for attributedString in providers as? [NSAttributedString] ?? [] {
                 self.addLabel(with: attributedString, centeredAt: dropPoint)
                 self.delegate?.emojiArtViewDidChange(self)
+                // in Lecture 15, we started using a radio station
+                // to broadcast changes to the EmojiArtView
+                // (in addition to supporting delegation if someone prefers that)
+                NotificationCenter.default.post(name: .EmojiArtViewDidChange, object: self)
             }
         }
     }
+    
+    // we use KVO to observe the center property of our UILabels
+    // when they change, we notify our delegate and broadcast on our radio station
+    // the observation only continues as long as it is in the heap
+    // we use this dictionary to keep observations in the heap
+    private var labelObservations = [UIView:NSKeyValueObservation]()
     
     func addLabel(with attributedString: NSAttributedString, centeredAt point: CGPoint) {
         let label = UILabel()
@@ -83,6 +97,24 @@ class EmojiArtView: UIView, UIDropInteractionDelegate {
         label.center = point
         addEmojiArtGestureRecognizers(to: label)
         addSubview(label)
+        labelObservations[label] = label.observe(\.center) { (label, change) in
+            self.delegate?.emojiArtViewDidChange(self)
+            NotificationCenter.default.post(name: .EmojiArtViewDidChange, object: self)
+        }
+    }
+    
+    // normally observing center stops when we leave the heap
+    // because that causes the labelObservations dictionary
+    // to leave the heap with us
+    // but just in case an emoji label is ever removed from us
+    // (currently we provide no UI for removing emoji, but someday?)
+    // we make sure to stop observing such an emoji label
+    
+    override func willRemoveSubview(_ subview: UIView) {
+        super.willRemoveSubview(subview)
+        if labelObservations[subview] != nil {
+            labelObservations[subview] = nil
+        }
     }
     
     var backgroundImage: UIImage? {
