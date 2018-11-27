@@ -63,6 +63,15 @@ class DocumentInfoViewController: UIViewController {
     
     @IBOutlet var thumbnailAspectRatio: NSLayoutConstraint!
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        //set preferred size of pop over view
+        if let fittedSize = topLevelView?.sizeThatFits(UIView.layoutFittingCompressedSize) {
+            preferredContentSize = CGSize(width: fittedSize.width + 30, height: fittedSize.height + 30)
+        }
+    }
+    @IBOutlet weak var topLevelView: UIStackView!
+    
     @IBAction func done() {
         //dissmiss self
         presentingViewController?.dismiss(animated: true)

@@ -175,11 +175,20 @@
                                 <action selector="close:" destination="dn6-ic-rhh" id="9Gx-Bn-Ipg"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Inspect" id="eEo-Wc-HCl">
-                            <connections>
-                                <segue destination="vTk-37-2yQ" kind="presentation" identifier="Show Document Info" modalPresentationStyle="formSheet" id="QX4-Kz-vCh"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Pop" id="ata-hv-Ueb">
+                                <connections>
+                                    <segue destination="vTk-37-2yQ" kind="popoverPresentation" identifier="Show Document Info" popoverAnchorBarButtonItem="ata-hv-Ueb" id="gWD-nd-13W">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Inspect" id="eEo-Wc-HCl">
+                                <connections>
+                                    <segue destination="vTk-37-2yQ" kind="presentation" identifier="Show Document Info" modalPresentationStyle="formSheet" id="QX4-Kz-vCh"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -199,11 +208,11 @@
             <objects>
                 <viewController id="vTk-37-2yQ" customClass="DocumentInfoViewController" customModule="EmojiArt_Document_based" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="b6S-49-5JA">
-                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="8Ck-sL-ncz">
-                                <rect key="frame" x="157.5" y="196" width="225" height="228"/>
+                                <rect key="frame" x="75" y="219.5" width="225" height="228"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mjH-W3-Yd0">
                                         <rect key="frame" x="0.0" y="0.0" width="225" height="125"/>
@@ -273,6 +282,7 @@
                         <outlet property="sizeLabel" destination="KjG-TM-LnH" id="PAv-iP-aAd"/>
                         <outlet property="thumbnailAspectRatio" destination="svD-kZ-r6l" id="UXg-dV-PCp"/>
                         <outlet property="thumbnailImageView" destination="mjH-W3-Yd0" id="yp7-aU-m10"/>
+                        <outlet property="topLevelView" destination="8Ck-sL-ncz" id="5v4-eB-DHa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aDB-fj-etb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -298,4 +308,7 @@
             <point key="canvasLocation" x="562" y="479"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="gWD-nd-13W"/>
+    </inferredMetricsTieBreakers>
 </document>
