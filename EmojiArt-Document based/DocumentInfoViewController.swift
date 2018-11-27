@@ -53,6 +53,13 @@ class DocumentInfoViewController: UIViewController {
                 constant: 0)
             thumbnailImageView.addConstraint(thumbnailAspectRatio)
         }
+        
+        //hide unnecessary button and make the background transparent of the pop over view
+        if presentationController is UIPopoverPresentationController {
+            thumbnailImageView?.isHidden = true
+            returnToDocumentButton?.isHidden = true
+            view.backgroundColor = .clear
+        }
     }
 
     @IBOutlet weak var thumbnailImageView: UIImageView!
@@ -60,6 +67,8 @@ class DocumentInfoViewController: UIViewController {
     @IBOutlet weak var sizeLabel: UILabel!
     
     @IBOutlet weak var createdLabel: UILabel!
+    
+    @IBOutlet weak var returnToDocumentButton: UIButton!
     
     @IBOutlet var thumbnailAspectRatio: NSLayoutConstraint!
     

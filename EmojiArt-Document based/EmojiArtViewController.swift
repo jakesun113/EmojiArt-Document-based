@@ -24,7 +24,7 @@ extension EmojiArt.EmojiInfo
     }
 }
 
-class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate
+class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UIPopoverPresentationControllerDelegate
 {
     //MARK: - Model
     
@@ -128,8 +128,27 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             if let destination = segue.destination.contents as? DocumentInfoViewController {
                 document?.thumbnail = emojiArtView.snapshot
                 destination.document = document
+                if let ppc = destination.popoverPresentationController {
+                    ppc.delegate = self
+                }
             }
         }
+    }
+    
+    // a Popover Segue adapts by default in horizontally compact environments
+    // but we don't actually want that for our small popover
+    // so we set the UIPopoverPresentationController's delegate
+    // to ourself in prepare(for segue:)
+    // then implement this delegate method which returns
+    // that the adaptation style it should use is always .none
+    // (i.e. never adapt)
+    // if we wanted to, we could have looked at the traitCollection
+    // to see what environment is being adapted to and made a decision from there
+    func adaptivePresentationStyle(
+        for controller: UIPresentationController,
+        traitCollection: UITraitCollection
+        ) -> UIModalPresentationStyle {
+        return .none
     }
     
     @IBOutlet weak var dropZone: UIView!
