@@ -66,7 +66,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     }
     
     //close the document
-    @IBAction func close(_ sender: UIBarButtonItem) {
+    @IBAction func close(_ sender: UIBarButtonItem? = nil) {
         
         if let observer = emojiArtViewObserver {
             NotificationCenter.default.removeObserver(observer)
@@ -149,6 +149,16 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         traitCollection: UITraitCollection
         ) -> UIModalPresentationStyle {
         return .none
+    }
+    
+    // we allow view controllers that we've presented
+    // to dismiss themselves by using an Unwind Segue back to us
+    // which will also close the document
+    // the view controller we're unwinding from
+    // is available in bySegue.source
+    // (we don't happen to need it, but if we did ...)
+    @IBAction func close(bySegue: UIStoryboardSegue) {
+        close()
     }
     
     @IBOutlet weak var dropZone: UIView!
