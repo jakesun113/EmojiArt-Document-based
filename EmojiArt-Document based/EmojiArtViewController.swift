@@ -77,7 +77,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             document?.thumbnail = emojiArtView.snapshot
         }
         //when clicking done button, hide the document
-        dismiss(animated: true) {
+        presentingViewController?.dismiss(animated: true) {
             self.document?.close { success in
                 //remove observing the document
                 if let observer = self.documentObserver {
@@ -117,6 +117,17 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
                         self.documentChanged()
                 }
                 )
+            }
+        }
+    }
+    
+    //MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Show Document Info" {
+            if let destination = segue.destination.contents as? DocumentInfoViewController {
+                document?.thumbnail = emojiArtView.snapshot
+                destination.document = document
             }
         }
     }
