@@ -54,7 +54,7 @@
                                     <constraint firstItem="RJS-Yx-XVI" firstAttribute="centerY" secondItem="MZi-uq-UuY" secondAttribute="centerY" id="zOa-kg-mo3"/>
                                 </constraints>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9GM-7B-5DD">
+                            <containerView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9GM-7B-5DD">
                                 <rect key="frame" x="784" y="590" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="0Rg-Hp-JOD"/>
@@ -380,7 +380,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="VhF-zJ-ZbF" firstAttribute="centerY" secondItem="TlZ-0z-MOU" secondAttribute="centerY" id="0mp-oe-27H"/>
                             <constraint firstItem="VhF-zJ-ZbF" firstAttribute="centerX" secondItem="TlZ-0z-MOU" secondAttribute="centerX" id="ZtD-Qb-hOU"/>
