@@ -99,6 +99,11 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             queue: OperationQueue.main,
             using: { notification in
                 print("documentState changed to \(self.document!.documentState)")
+                if self.document!.documentState == .normal, let docInfoVC = self.embeddDocInfo {
+                    docInfoVC.document = self.document
+                    self.embeddedDocInfoWidth.constant = docInfoVC.preferredContentSize.width
+                    self.embeddedDocInfoHeight.constant = docInfoVC.preferredContentSize.height
+                }
         }
         )
         document?.open { success in
@@ -133,7 +138,13 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
                 }
             }
         }
+        else if segue.identifier == "Embed Document Info" {
+            embeddDocInfo = segue.destination.contents as? DocumentInfoViewController
+        }
     }
+    
+    private var embeddDocInfo : DocumentInfoViewController?
+    
     
     // a Popover Segue adapts by default in horizontally compact environments
     // but we don't actually want that for our small popover
@@ -160,7 +171,9 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     @IBAction func close(bySegue: UIStoryboardSegue) {
         close()
     }
+    @IBOutlet weak var embeddedDocInfoHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var embeddedDocInfoWidth: NSLayoutConstraint!
     @IBOutlet weak var dropZone: UIView!
         {
         //set delegation to self
