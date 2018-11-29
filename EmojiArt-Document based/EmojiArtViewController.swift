@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 
 extension EmojiArt.EmojiInfo
 {
@@ -24,7 +25,7 @@ extension EmojiArt.EmojiInfo
     }
 }
 
-class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UIPopoverPresentationControllerDelegate
+class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UIPopoverPresentationControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     //MARK: - Model
     
@@ -92,40 +93,76 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //start observering the document
-        documentObserver = NotificationCenter.default.addObserver(
-            forName: UIDocument.stateChangedNotification,
-            object: document,
-            queue: OperationQueue.main,
-            using: { notification in
-                print("documentState changed to \(self.document!.documentState)")
-                if self.document!.documentState == .normal, let docInfoVC = self.embeddDocInfo {
-                    docInfoVC.document = self.document
-                    self.embeddedDocInfoWidth.constant = docInfoVC.preferredContentSize.width
-                    self.embeddedDocInfoHeight.constant = docInfoVC.preferredContentSize.height
+        if document?.documentState != .normal {
+            //start observering the document
+            documentObserver = NotificationCenter.default.addObserver(
+                forName: UIDocument.stateChangedNotification,
+                object: document,
+                queue: OperationQueue.main,
+                using: { notification in
+                    print("documentState changed to \(self.document!.documentState)")
+                    if self.document!.documentState == .normal, let docInfoVC = self.embeddDocInfo {
+                        docInfoVC.document = self.document
+                        self.embeddedDocInfoWidth.constant = docInfoVC.preferredContentSize.width
+                        self.embeddedDocInfoHeight.constant = docInfoVC.preferredContentSize.height
+                    }
+            }
+            )
+            document?.open { success in
+                if success {
+                    self.title = self.document?.localizedName
+                    self.emojiArt = self.document?.emojiArt
+                    // now that our document is open
+                    // start watching our EmojiArtView for changes
+                    // so we can let our document know when it has changes
+                    // that need to be autosaved
+                    self.emojiArtViewObserver = NotificationCenter.default.addObserver(
+                        forName: .EmojiArtViewDidChange,
+                        object: self.emojiArtView,
+                        queue: OperationQueue.main,
+                        using: { notification in
+                            self.documentChanged()
+                    }
+                    )
                 }
-        }
-        )
-        document?.open { success in
-            if success {
-                self.title = self.document?.localizedName
-                self.emojiArt = self.document?.emojiArt
-                // now that our document is open
-                // start watching our EmojiArtView for changes
-                // so we can let our document know when it has changes
-                // that need to be autosaved
-                self.emojiArtViewObserver = NotificationCenter.default.addObserver(
-                    forName: .EmojiArtViewDidChange,
-                    object: self.emojiArtView,
-                    queue: OperationQueue.main,
-                    using: { notification in
-                        self.documentChanged()
-                }
-                )
             }
         }
     }
     
+    //MARK: - Camera
+    
+    @IBOutlet weak var cameraButtion: UIBarButtonItem! {
+        didSet {
+            cameraButtion.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        }
+    }
+    
+    @IBAction func takeBackgroundPhoto(_ sender: UIBarButtonItem) {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.mediaTypes = [kUTTypeImage as String]
+        picker.allowsEditing = true
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.presentingViewController?.dismiss(animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        // Local variable inserted by Swift 4.2 migrator.
+        let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+        
+        if let image = ((info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] ?? info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)]) as? UIImage)?.scaled(by: 0.25) {
+            //            let url = image.storeLocallyAsJPEG(named: String(Date.timeIntervalSinceReferenceDate))
+            let url = image.storeLocallyAsJPEG(named: String(Date.timeIntervalSinceReferenceDate))
+            emojiArtBackgroundImage = (url, image)
+            documentChanged()
+        }
+        picker.presentingViewController?.dismiss(animated: true)
+        
+    }
     //MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -467,5 +504,14 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         }
     }
     
-    
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+    return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+    return input.rawValue
 }

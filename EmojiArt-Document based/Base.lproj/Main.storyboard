@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -36,7 +36,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MZi-uq-UuY">
                                 <rect key="frame" x="0.0" y="158" width="1024" height="560"/>
                                 <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RJS-Yx-XVI">
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RJS-Yx-XVI">
                                         <rect key="frame" x="0.0" y="0.0" width="1024" height="560"/>
                                         <constraints>
                                             <constraint firstAttribute="width" priority="250" constant="1024" id="5cb-5R-kjZ"/>
@@ -200,10 +200,16 @@
                                     <segue destination="vTk-37-2yQ" kind="presentation" identifier="Show Document Info" modalPresentationStyle="formSheet" id="QX4-Kz-vCh"/>
                                 </connections>
                             </barButtonItem>
+                            <barButtonItem systemItem="camera" id="79l-6A-ypz">
+                                <connections>
+                                    <action selector="takeBackgroundPhoto:" destination="dn6-ic-rhh" id="9Hv-Qn-fFn"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="cameraButtion" destination="79l-6A-ypz" id="UZl-LE-ckw"/>
                         <outlet property="dropZone" destination="MZi-uq-UuY" id="12Y-8d-ZKY"/>
                         <outlet property="embeddedDocInfoHeight" destination="IKg-fF-JsZ" id="pur-8D-LKs"/>
                         <outlet property="embeddedDocInfoWidth" destination="0Rg-Hp-JOD" id="UxU-7M-rPE"/>
@@ -385,6 +391,7 @@
                             <constraint firstItem="VhF-zJ-ZbF" firstAttribute="centerY" secondItem="TlZ-0z-MOU" secondAttribute="centerY" id="0mp-oe-27H"/>
                             <constraint firstItem="VhF-zJ-ZbF" firstAttribute="centerX" secondItem="TlZ-0z-MOU" secondAttribute="centerX" id="ZtD-Qb-hOU"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="LAH-f9-4Ir"/>
                     </view>
                     <connections>
                         <outlet property="createdLabel" destination="bI8-ba-ear" id="dXj-me-J34"/>
